@@ -18,11 +18,11 @@ RegisterNetEvent('esx:playerLoaded')
 AddEventHandler('esx:playerLoaded', function(xPlayer)
 	ESX.PlayerData = xPlayer 
     PlayerData = xPlayer
-	TriggerServerEvent("cxProperty:getInfos")
+	TriggerServerEvent("fProperty:getInfos")
 end)
 
-RegisterNetEvent('cxProperty:ReponsePerms')
-AddEventHandler('cxProperty:ReponsePerms', function()
+RegisterNetEvent('fProperty:ReponsePerms')
+AddEventHandler('fProperty:ReponsePerms', function()
 	RageUI.CloseAll()
 	FreezeEntityPosition(PlayerPedId(), false)
 	MenuIsOpen, InProperty = false, true 
@@ -59,8 +59,8 @@ PropertyBuilderMenu.Closed = function()
 	viewsMarkers(false)
 end
 
-RegisterNetEvent("cxProperty:OpenBuilderMenu")
-AddEventHandler("cxProperty:OpenBuilderMenu", function(AllProperties)
+RegisterNetEvent("fProperty:OpenBuilderMenu")
+AddEventHandler("fProperty:OpenBuilderMenu", function(AllProperties)
 	allProperties = AllProperties
     if MenuIsOpen then
         MenuIsOpen = false
@@ -193,13 +193,13 @@ AddEventHandler("cxProperty:OpenBuilderMenu", function(AllProperties)
 							else
 								RageUI.Button("Révoquer la propriété", false, {RightLabel = "→"}, true, {
 									onSelected = function()
-										TriggerServerEvent("cxProperty:UpdateOwner", v.propertyID)
+										TriggerServerEvent("fProperty:UpdateOwner", v.propertyID)
 									end
 								})
 							end
 							RageUI.Button("Supprimer la propriété", false, {RightBadge = RageUI.BadgeStyle.Alert}, true, {
 								onSelected = function()
-									TriggerServerEvent("cxProperty:DeleteProperty", v.propertyID)
+									TriggerServerEvent("fProperty:DeleteProperty", v.propertyID)
 									RageUI.GoBack()
 								end
 							})
@@ -212,11 +212,11 @@ AddEventHandler("cxProperty:OpenBuilderMenu", function(AllProperties)
 						RageUI.Checkbox("Activer - Désactiver le mode visite", false, Config.BuilderSettings.CheckForView, {}, {
 							onChecked = function()
 								ViewCoordsPlayer = GetEntityCoords(PlayerPedId())
-								TriggerEvent("cxProperty:ViewInteriors", true)	
+								TriggerEvent("fProperty:ViewInteriors", true)	
 							end,
 							onUnChecked = function()
 								SetEntityCoords(PlayerPedId(), ViewCoordsPlayer.x, ViewCoordsPlayer.y, ViewCoordsPlayer.z)
-								TriggerEvent("cxProperty:ViewInteriors", false)
+								TriggerEvent("fProperty:ViewInteriors", false)
 							end,
 							onSelected = function(Index)
 								Config.BuilderSettings.CheckForView = Index
@@ -309,7 +309,7 @@ AddEventHandler("cxProperty:OpenBuilderMenu", function(AllProperties)
 									if Config.BuilderSettings.PropertyInfos.garageInteriors == nil then 
 										Config.BuilderSettings.PropertyInfos.garageInteriors = 1
 									end
-									TriggerServerEvent("cxProperty:AddProperty", Config.BuilderSettings.PropertyInfos)
+									TriggerServerEvent("fProperty:AddProperty", Config.BuilderSettings.PropertyInfos)
 									Wait(50)
 									Config.BuilderSettings.PropertyInfos = {}
 									resetVar()
@@ -325,7 +325,7 @@ AddEventHandler("cxProperty:OpenBuilderMenu", function(AllProperties)
 									if Config.BuilderSettings.PropertyInfos.garageInteriors == nil then 
 										Config.BuilderSettings.PropertyInfos.garageInteriors = 1
 									end
-									TriggerServerEvent("cxProperty:AddProperty", Config.BuilderSettings.PropertyInfos)
+									TriggerServerEvent("fProperty:AddProperty", Config.BuilderSettings.PropertyInfos)
 									resetVar()
 								end
 							})
@@ -345,7 +345,7 @@ CreateThread(function()
 		if PlayerData.job ~= nil and PlayerData.job.name == Config.PropertySettings.AllowedJob then 
             Wait(5)
             if IsControlJustReleased(0, 167) then
-				TriggerServerEvent("cxProperty:openJobInteractionsMenu")
+				TriggerServerEvent("fProperty:openJobInteractionsMenu")
             end
         else
             Wait(500)
@@ -367,8 +367,8 @@ OwnedPropertyInteractionsMenu.Closed = function()
 	FreezeEntityPosition(PlayerPedId(), false)
 end
 
-RegisterNetEvent("cxProperty:OpenPropertyMenu")
-AddEventHandler("cxProperty:OpenPropertyMenu", function(isOwned, InfosOfProperty)
+RegisterNetEvent("fProperty:OpenPropertyMenu")
+AddEventHandler("fProperty:OpenPropertyMenu", function(isOwned, InfosOfProperty)
 	myProperties = InfosOfProperty
     if MenuIsOpen then
         MenuIsOpen = false
@@ -395,7 +395,7 @@ AddEventHandler("cxProperty:OpenPropertyMenu", function(isOwned, InfosOfProperty
 							if v.propertyOwner ~= "-" then 
 								RageUI.Button("Sonner à la porte", false, {RightLabel = "→"}, true, {
 									onSelected = function()
-										TriggerServerEvent("cxProperty:DringDring", v.propertyOwner)
+										TriggerServerEvent("fProperty:DringDring", v.propertyOwner)
 									end
 								})
 								if Config.PropertySettings.ActivateForcedDoor then 
@@ -443,8 +443,8 @@ end
 
 garageCooldown = false 
 
-RegisterNetEvent("cxProperty:OpenGarageMenu")
-AddEventHandler("cxProperty:OpenGarageMenu", function(isOwned, InfosOfProperty, VehiclesOfProperty)
+RegisterNetEvent("fProperty:OpenGarageMenu")
+AddEventHandler("fProperty:OpenGarageMenu", function(isOwned, InfosOfProperty, VehiclesOfProperty)
 	myProperties = InfosOfProperty
 	if VehiclesOfProperty ~= nil then 
 		myVehicles = VehiclesOfProperty
@@ -506,8 +506,8 @@ OwnedPropertyGestionMenu.Closed = function()
 	FreezeEntityPosition(PlayerPedId(), false)
 end
 
-RegisterNetEvent("cxProperty:OpenGestionMenu")
-AddEventHandler("cxProperty:OpenGestionMenu", function()
+RegisterNetEvent("fProperty:OpenGestionMenu")
+AddEventHandler("fProperty:OpenGestionMenu", function()
     if MenuIsOpen then
         MenuIsOpen = false
         RageUI.Visible(OwnedPropertyGestionMenu, false)
@@ -530,7 +530,7 @@ AddEventHandler("cxProperty:OpenGestionMenu", function()
 								RageUI.Button("Faire rentrer (~b~"..b.playerName.."~s~) dans la propriété", false, {RightLabel = "→"}, true, {
 									onSelected = function()
 										table.remove(GetInvite, t)
-										TriggerServerEvent("cxProperty:AcceptDringDring", b.source, v.propertyID)
+										TriggerServerEvent("fProperty:AcceptDringDring", b.source, v.propertyID)
 									end
 								})
 							end
@@ -560,8 +560,8 @@ OwnedPropertyGarageMenu.Closed = function()
 	FreezeEntityPosition(PlayerPedId(), false)
 end
 
-RegisterNetEvent("cxProperty:OpenGestionGarageMenu")
-AddEventHandler("cxProperty:OpenGestionGarageMenu", function(OwnedVehicles, GarageVehicles)
+RegisterNetEvent("fProperty:OpenGestionGarageMenu")
+AddEventHandler("fProperty:OpenGestionGarageMenu", function(OwnedVehicles, GarageVehicles)
 	myOwnedVehicles = OwnedVehicles
 	myGarageVehicles = GarageVehicles
     if MenuIsOpen then
@@ -602,7 +602,7 @@ AddEventHandler("cxProperty:OpenGestionGarageMenu", function(OwnedVehicles, Gara
 											onSelected = function()
 												if not garageCooldown then 
 													garageCooldown = true 
-													TriggerServerEvent("cxProperty:InteractionsGarage", v.propertyID, b.vehicle, 1)
+													TriggerServerEvent("fProperty:InteractionsGarage", v.propertyID, b.vehicle, 1)
 													SetTimeout(750, function()
 														garageCooldown = false 
 													end)
@@ -638,7 +638,7 @@ AddEventHandler("cxProperty:OpenGestionGarageMenu", function(OwnedVehicles, Gara
 												if b.stored == 1 then 
 													if not garageCooldown then 
 														garageCooldown = true 
-														TriggerServerEvent("cxProperty:InteractionsGarage", v.propertyID, b.data_vehicle, 2)
+														TriggerServerEvent("fProperty:InteractionsGarage", v.propertyID, b.data_vehicle, 2)
 														SetTimeout(750, function()
 															garageCooldown = false 
 														end)
@@ -677,8 +677,8 @@ end
 
 actionCooldown = false 
 
-RegisterNetEvent("cxProperty:OpenStorageMenu")
-AddEventHandler("cxProperty:OpenStorageMenu", function(propertyID)
+RegisterNetEvent("fProperty:OpenStorageMenu")
+AddEventHandler("fProperty:OpenStorageMenu", function(propertyID)
     if MenuIsOpen then
         MenuIsOpen = false
         RageUI.Visible(OwnedPropertyStorageMenu, false)
@@ -714,7 +714,7 @@ AddEventHandler("cxProperty:OpenStorageMenu", function(propertyID)
 																	if count ~= nil then 
 																		count = tonumber(count)
 																		if type(count) == "number" then 
-																			TriggerServerEvent("cxProperty:ActionsMoney", v.propertyID, v.dataMoney, t, count, 1, 1)
+																			TriggerServerEvent("fProperty:ActionsMoney", v.propertyID, v.dataMoney, t, count, 1, 1)
 																			WaitMoney = false 
 																			Wait(250)
 																			WaitMoney = true
@@ -731,7 +731,7 @@ AddEventHandler("cxProperty:OpenStorageMenu", function(propertyID)
 																	if count ~= nil then 
 																		count = tonumber(count)
 																		if type(count) == "number" then 
-																			TriggerServerEvent("cxProperty:ActionsMoney", v.propertyID, v.dataMoney, t, count, 1, 2)
+																			TriggerServerEvent("fProperty:ActionsMoney", v.propertyID, v.dataMoney, t, count, 1, 2)
 																			WaitMoney = false 
 																			Wait(250)
 																			WaitMoney = true
@@ -757,7 +757,7 @@ AddEventHandler("cxProperty:OpenStorageMenu", function(propertyID)
 																	if count ~= nil then 
 																		count = tonumber(count)
 																		if type(count) == "number" then 
-																			TriggerServerEvent("cxProperty:ActionsMoney", v.propertyID, v.dataMoney, t, count, 2, 1)
+																			TriggerServerEvent("fProperty:ActionsMoney", v.propertyID, v.dataMoney, t, count, 2, 1)
 																			WaitMoney = false 
 																			Wait(250)
 																			WaitMoney = true
@@ -774,7 +774,7 @@ AddEventHandler("cxProperty:OpenStorageMenu", function(propertyID)
 																	if count ~= nil then 
 																		count = tonumber(count)
 																		if type(count) == "number" then 
-																			TriggerServerEvent("cxProperty:ActionsMoney", v.propertyID, v.dataMoney, t, count, 2, 2)
+																			TriggerServerEvent("fProperty:ActionsMoney", v.propertyID, v.dataMoney, t, count, 2, 2)
 																			WaitMoney = false 
 																			Wait(250)
 																			WaitMoney = true
@@ -821,7 +821,7 @@ AddEventHandler("cxProperty:OpenStorageMenu", function(propertyID)
 												count = tonumber(count)
 												if type(count) == "number" then
 													WaitStorage = false
-													TriggerServerEvent("cxProperty:ActionsStorage", propertyID, DataStorage, v.name, countStorage, count, 1)
+													TriggerServerEvent("fProperty:ActionsStorage", propertyID, DataStorage, v.name, countStorage, count, 1)
 													Wait(120)
 													refreshInventory()
 												end
@@ -857,7 +857,7 @@ AddEventHandler("cxProperty:OpenStorageMenu", function(propertyID)
 															count = tonumber(count)
 															if type(count) == "number" then 
 																WaitStorage = false
-																TriggerServerEvent("cxProperty:ActionsStorage", propertyID, v.data, v.data[t].name, countStorage, count, 2)
+																TriggerServerEvent("fProperty:ActionsStorage", propertyID, v.data, v.data[t].name, countStorage, count, 2)
 															end
 														end
 														SetTimeout(350, function()
@@ -901,8 +901,8 @@ PropertyOwnerMenu.Closed = function()
 end
 
 
-RegisterNetEvent("cxProperty:OpenOwnerMenu")
-AddEventHandler("cxProperty:OpenOwnerMenu", function(propertyOwnerInfos)
+RegisterNetEvent("fProperty:OpenOwnerMenu")
+AddEventHandler("fProperty:OpenOwnerMenu", function(propertyOwnerInfos)
 	ownerList = propertyOwnerInfos
     if MenuIsOpen then
         MenuIsOpen = false
@@ -932,7 +932,7 @@ AddEventHandler("cxProperty:OpenOwnerMenu", function(propertyOwnerInfos)
 															onSelected = function()
 																if not ownerCooldown then 
 																	ownerCooldown = true 
-																	TriggerServerEvent("cxProperty:addOwner", b.propertyID, v.id, b.ownerList)
+																	TriggerServerEvent("fProperty:addOwner", b.propertyID, v.id, b.ownerList)
 																	SetTimeout(450, function()
 																		ownerCooldown = false 
 																	end)
@@ -954,7 +954,7 @@ AddEventHandler("cxProperty:OpenOwnerMenu", function(propertyOwnerInfos)
 													onSelected = function()
 														if not ownerCooldown then 
 															ownerCooldown = true 
-															TriggerServerEvent("cxProperty:addOwner", b.propertyID, v.id, b.ownerList)
+															TriggerServerEvent("fProperty:addOwner", b.propertyID, v.id, b.ownerList)
 															SetTimeout(450, function()
 																ownerCooldown = false 
 															end)
@@ -978,7 +978,7 @@ AddEventHandler("cxProperty:OpenOwnerMenu", function(propertyOwnerInfos)
 										onSelected = function()
 											if not ownerCooldown then 
 												ownerCooldown = true 
-												TriggerServerEvent("cxProperty:deleteOwner", v.propertyID, b.identifier, v.ownerList)
+												TriggerServerEvent("fProperty:deleteOwner", v.propertyID, b.identifier, v.ownerList)
 												SetTimeout(450, function()
 													ownerCooldown = false 
 												end)
